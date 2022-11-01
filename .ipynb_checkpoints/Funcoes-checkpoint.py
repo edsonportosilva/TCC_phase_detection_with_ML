@@ -46,8 +46,7 @@ def abs_and_phases(sfm):
     """
     amplitudes = np.abs(sfm.copy()[0])
     phases = np.angle(sfm.copy()[0])
-    data = {'amplitudes': amplitudes, 'phases': phases}
-    return data
+    return {'amplitudes': amplitudes, 'phases': phases}
 
 
 def dataset_01(sfm, ordem: int):

@@ -18,15 +18,15 @@ plt.rcParams['font.size'] = 18
 plt.rcParams['figure.figsize'] = [16, 8]
 plt.rcParams['lines.linewidth'] = 2
 # %%
-resultados = dict()
+resultados = {}
+M = 16        # ordem da modulação
+Fb = 40e9      # taxa de símbolos
+SpS = 4         # amostras por símbolo
+SNR = 40        # relação sinal ruído (dB)
+rolloff = 0.01  # Rolloff do filtro formatador de pulso
 for amostras in [2**x for x in range(5,11)]:
     print(f'{"#"*20} {amostras} Amostras {"#"*20}')
-    M = 16        # ordem da modulação
-    Fb = 40e9      # taxa de símbolos
-    SpS = 4         # amostras por símbolo
     Fs = SpS*Fb    # taxa de amostragem
-    SNR = 40        # relação sinal ruído (dB)
-    rolloff = 0.01  # Rolloff do filtro formatador de pulso
     sfm, A = sinal_qam_fase_min(M,Fb,SpS,SNR)
     #amostras = 128
     dataset , X , y = dataset_02(sfm,amostras)
@@ -56,7 +56,7 @@ for amostras in [2**x for x in range(5,11)]:
     sinal_predito_revertido = reverter_sinal_fase_min(sinal_predito ,A).reshape(1,-1)
     sinal_predito_filtrado = normcenter(lowpassFilter(sinal_predito_revertido, Fs, 1/Fb, 0.001, taps=4001))
     sinal_base_revertido = reverter_sinal_fase_min(sfm[:,50000:60001],A)
-    teste = str(amostras) + ' Amostras'
+    teste = f'{str(amostras)} Amostras'
     resultados[teste] = {'Sinais fase minima':(sfm[:,50000:60001], sinal_predito),
                          'Sinais revertidos':(sinal_base_revertido,sinal_predito_revertido),
                          'Sinal predito filtrado':(sinal_predito_filtrado)}

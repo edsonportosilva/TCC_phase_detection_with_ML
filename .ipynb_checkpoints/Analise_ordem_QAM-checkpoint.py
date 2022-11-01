@@ -18,17 +18,17 @@ plt.rcParams['font.size'] = 18
 plt.rcParams['figure.figsize'] = [16, 8]
 plt.rcParams['lines.linewidth'] = 2
 # %%
-resultados = dict()
+resultados = {}
+#M = 64        # ordem da modulação
+Fb = 40e9      # taxa de símbolos
+SpS = 4         # amostras por símbolo
+SNR = 40        # relação sinal ruído (dB)
+rolloff = 0.01  # Rolloff do filtro formatador de pulso
+ordem = 128
 for M in [4 , 8 , 16 , 32 , 64 , 128]:
     print(f'{"#"*20} {M} QAM {"#"*20}')
-    #M = 64        # ordem da modulação
-    Fb = 40e9      # taxa de símbolos
-    SpS = 4         # amostras por símbolo
     Fs = SpS*Fb    # taxa de amostragem
-    SNR = 40        # relação sinal ruído (dB)
-    rolloff = 0.01  # Rolloff do filtro formatador de pulso
     sfm, A = sinal_qam_fase_min(M,Fb,SpS,SNR)
-    ordem = 128
     dataset , X , y = dataset_02(sfm,ordem)
 
     X_train = X[:50000]
@@ -56,7 +56,7 @@ for M in [4 , 8 , 16 , 32 , 64 , 128]:
     sinal_predito_revertido = reverter_sinal_fase_min(sinal_predito ,A).reshape(1,-1)
     sinal_predito_filtrado = normcenter(lowpassFilter(sinal_predito_revertido, Fs, 1/Fb, 0.001, taps=4001))
     sinal_base_revertido = reverter_sinal_fase_min(sfm[:,50000:60001],A)
-    teste = str(M) + ' QAM'
+    teste = f'{str(M)} QAM'
     resultados[teste] = {'Sinais fase minima':(sfm[:,50000:60001], sinal_predito),
                          'Sinais revertidos':(sinal_base_revertido,sinal_predito_revertido),
                          'Sinal predito filtrado':(sinal_predito_filtrado)}
@@ -65,7 +65,6 @@ print(' FIM ')
 
 #%%
 nome_arquivo = 'Result_dif_ordens_QAM.pkl'
-arquivo = open(nome_arquivo,'wb')
-pickle.dump(resultados,arquivo)
-arquivo.close()
+with open(nome_arquivo,'wb') as arquivo:
+    pickle.dump(resultados,arquivo)
 # %%
