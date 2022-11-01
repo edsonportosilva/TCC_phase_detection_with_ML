@@ -68,8 +68,7 @@ def abs_and_phases(sfm):
     """
     amplitudes = np.abs(sfm.copy()[0])
     phases = np.angle(sfm.copy()[0])
-    data = {'amplitudes': amplitudes, 'phases': phases}
-    return data
+    return {'amplitudes': amplitudes, 'phases': phases}
 
 def dataset_01(sfm, ordem: int):
     """O dataset criado pela função é o resultado de uma convolução simples ao longo
@@ -128,9 +127,9 @@ def dataset_02(sfm, ordem: int,size):
     for n in range(size):
         aux = amplitudes[n:ordem+n]
         X[n] = aux
-    y = phases[int(ordem/2):size+int(ordem/2)]
-    data['amplitudes'] = data['amplitudes'][int(ordem/2):size+int(ordem/2)]
-    data['phases'] = data['phases'][int(ordem/2):size+int(ordem/2)]
+    y = phases[ordem // 2:size + ordem // 2]
+    data['amplitudes'] = data['amplitudes'][ordem // 2:size + ordem // 2]
+    data['phases'] = data['phases'][ordem // 2:size + ordem // 2]
 
     return data, X, y
 
@@ -190,7 +189,7 @@ def dataset_02_CNN(sfm, ordem: int):
     phases = data['phases'].copy()
     X = np.zeros((size, ordem, ordem))
     for n in range(size):
-        aux = amplitudes[n:int(ordem*ordem)+n].reshape(ordem,ordem)
+        aux = amplitudes[n:int(ordem**2) + n].reshape(ordem, ordem)
         X[n] = aux
     X = X.reshape((size,ordem,ordem,1))
     y = phases[:size]
